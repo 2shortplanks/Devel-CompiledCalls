@@ -1,0 +1,20 @@
+Ever wondered where all places a function is called in Perl?  Turns out that during my jetlagged ridden first day back at work, I wrote a module that can do just that called <a href="https://metacpan.org/release/Devel-CompiledCalls">Devel::CompiledCalls</a>.
+
+Use of the module is easy.  You just load it from the command line:
+
+    shell$ perl -c -MDevel::CompiledCalls=Data::Dumper::Dumper myscript.pl
+
+And BAM, it prints out just what you wanted to know:
+
+    Data::Dumper::Dumper call at line 100 of MyModule.pm
+    Data::Dumper::Dumper call at line 4 of myscript.pl
+    myscript.pl syntax OK
+
+While traditionally it's been easy to write code using modules like <a href="https://metacpan.org/release/Hook-LexWrap">Hook::LexWrap</a> that prints out whenever a function is executed and at that point where that function is called from, what we really want is to print out at the time the call to the function is compiled by the Perl compiler.  This is important because you might have a call to the function in some code that is only executed very infrequently (e.g. leap year handling) which would not be simply identified by hooking function execution at run time.
+
+In the past developers have relied too much on tools like search and replace in our editors to locate the function calls.  Given that Perl is hard to parse, and given that many of the calls might be squirreled away in installed modules that your editor doesn't typically have open, this isn't the best approach.
+
+What Devel::CompiledCalls does is hook the compilation of the code (techically, we hook the CHECK phase of the code, but the effect is the same) with Zefram's <a href="https://metacpan.org/release/B-CallChecker">B::CallChecker</a>.  This allows the callback to fire as soon as the code is read in by Perl.
+
+All in all, I'm pretty happy with the module and it's a new tool in my bag of tricks for getting to grips with big, unwieldy codebases.
+
