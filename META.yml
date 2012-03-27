@@ -1,5 +1,7 @@
 ---
 abstract: 'show where calls to a named subroutine are compiled'
+author:
+  - 'Written by Mark Fowler B<mark@twoshortplanks.com>.'
 build_requires:
   ExtUtils::MakeMaker: 6.42
   Test::Builder::Tester: 0.09
@@ -22,5 +24,7 @@ requires:
   B::Compiling: 0.02
   perl: 5.8.0
 resources:
+  homepage: http://github.com/2shortplanks/Devel-CompiledCalls/tree
   license: http://dev.perl.org/licenses/
+  repository: git://github.com/2shortplanks/Devel-CompiledCalls.git
 version: 1.00
