@@ -12,7 +12,7 @@ use B::CallChecker qw(
 );
 use Sub::Identify qw(sub_fullname);
 
-our $VERSION = "1.00";
+our $VERSION = "2.00";
 
 =head1 NAME
 

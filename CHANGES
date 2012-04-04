@@ -1,11 +1,15 @@
 
 
-1.01  Thanks to Zefram for lots of feedback on the module
+2.00  Thanks to Zefram for lots of feedback on the module
 
       Changed output to have the same format as die / carp
 
       Changed the default namespace to be the caller namespace
 
       Support subroutine references
+
+      Better documentation
+
+      Protect against $\ having been changed
 
 1.00  Initial release
