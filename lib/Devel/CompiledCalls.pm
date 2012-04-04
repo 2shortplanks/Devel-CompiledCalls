@@ -97,9 +97,22 @@ sub attach_callback {
 	my $name = shift;
 	my $callback = shift;
 
+	# check for an unqualifed subroutine name.  If we have one
+	# then we need to give it our *caller's* package (or, potentially
+	# our caller's caller package
+	my $fully_qualified_name = 
+		ref $name eq "CODE" ? $name :
+		$name =~ /::/        ? $name  : do {
+			my $caller_package;
+			my $level = 1;
+			do { ($caller_package) = caller($level++) }
+				while ($caller_package eq __PACKAGE__);
+			$caller_package.'::'.$name;
+		};
+
 	# get the sub (this will spring into existence with autovivication
 	# if needed)
-	my $uboat = do { no strict 'subs'; \&{$name} };
+	my $uboat = do { no strict 'subs'; \&{$fully_qualified_name} };
 
 	# work out what original check would have been made
 	my ($original_check, $data) = cv_get_call_checker($uboat);
