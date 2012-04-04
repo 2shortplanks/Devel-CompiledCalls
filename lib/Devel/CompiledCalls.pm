@@ -9,7 +9,6 @@ use B::Compiling qw( PL_compiling );
 use B::CallChecker qw(
 	cv_get_call_checker
 	cv_set_call_checker
-	ck_entersub_args_proto
 );
 use Sub::Identify qw(sub_fullname);
 
@@ -71,6 +70,8 @@ be installed.
 =head2 Custom callbacks
 
 Custom callbacks can be installed with the C<attach_callback> subroutine.
+This routine is not exported and must be called with a fully qualified
+function call.
 
 =over
 
@@ -153,7 +154,8 @@ compiled until that point.  A similar problem happens with modules that are
 loaded at runtime on demand;  Until the module is loaded the code is not
 compiled and nothing is printed until such compilation happens.
 
-Also, this module can't find calls that are constructed by accessing the
+Also, this module can't find calls that are constructed in any way other
+than standard function calling.  For example accessing the
 symbolic name of the function directly.  This won't print anything:
 
    use Devel::CompiledCalls qw(foo);
@@ -161,7 +163,16 @@ symbolic name of the function directly.  This won't print anything:
    my $uboat = \&{"foo"};
    $uboat->();
 
-As no subroutine call is actually compiled. 
+As no subroutine call is actually compiled.  Similarly this won't print
+anything either:
+
+   use Devel::CompiledCalls qw(foo);
+   sub foo  { ... }
+   &foo;
+   &foo("whatever");
+
+Because the use of the C<&> sigil disables prototype checking which is
+what we're hooking to record the call.
 
 Using this module has the effect of making the subroutine we are hooking
 "exist".  i.e.
