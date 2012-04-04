@@ -11,6 +11,7 @@ use B::CallChecker qw(
 	cv_set_call_checker
 	ck_entersub_args_proto
 );
+use Sub::Identify qw(sub_fullname);
 
 our $VERSION = "1.00";
 
@@ -73,9 +74,15 @@ Custom callbacks can be installed with the C<attach_callback> subroutine.
 
 =over
 
+=item attach_callback( $subroutine_ref, $callback )
+
 =item attach_callback( $subroutine_name, $callback )
 
-The callback will be called whenever a call to the named subroutine is compiled.
+The callback will be called whenever a call to the subroutine is compiled.  The
+subroutine can either be passed by reference, by fully qualified name (including
+the package,) or by just the subroutine name (in which case it will be assumed
+to be in the same package as C<attach_callback> is called from.)
+
 The callback will be executed with three parameters: The name of the subroutine,
 the filename of the source file, and the the line of the sourcefile that
 contains the subroutine.
@@ -100,15 +107,16 @@ sub attach_callback {
 	# check for an unqualifed subroutine name.  If we have one
 	# then we need to give it our *caller's* package (or, potentially
 	# our caller's caller package
-	my $fully_qualified_name = 
+	my $fully_qualified_name =
 		ref $name eq "CODE" ? $name :
-		$name =~ /::/        ? $name  : do {
+		$name =~ /::/x      ? $name  : do {
 			my $caller_package;
 			my $level = 1;
 			do { ($caller_package) = caller($level++) }
 				while ($caller_package eq __PACKAGE__);
 			$caller_package.'::'.$name;
 		};
+	$name = sub_fullname($name) if ref($name) eq "CODE";
 
 	# get the sub (this will spring into existence with autovivication
 	# if needed)

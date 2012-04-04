@@ -22,6 +22,7 @@ no_index:
 requires:
   B::CallChecker: 0.000
   B::Compiling: 0.02
+  Sub::Identify: 0.04
   perl: 5.8.0
 resources:
   homepage: http://github.com/2shortplanks/Devel-CompiledCalls/tree
