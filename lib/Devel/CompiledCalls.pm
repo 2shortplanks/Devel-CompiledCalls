@@ -96,6 +96,7 @@ sub import {
 	shift;
 	attach_callback($_, sub {
 		my ($name, $file, $line,$stash) = @_;
+		local $\ = undef;  # locally reset back to default just in case
 		print {*STDERR} "$name call at $file line $line.\n";
 	}) foreach @_;
 	return;
