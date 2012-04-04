@@ -19,5 +19,6 @@ sub never_called {
 is_deeply(\@calls, [ 
 	[ "Data::Dumper::Dumper", __FILE__, __LINE__ - 4, ],
 	[ "Data::Dumper::Dumper", __FILE__, __LINE__ - 4, ],
-], "calls correctly recorded")
+	[ "Data::Dumper::Dumper", __FILE__, __LINE__ + 1, ],
+], "calls correctly recorded") or diag Dumper \@calls;
 
