@@ -22,8 +22,8 @@ Devel::CompiledCalls - show where calls to a named subroutine are compiled
 
   # from the shell
   shell$ perl -c -MDevel::CompiledCalls=Data::Dumper::Dumper myscript.pl
-  Data::Dumper::Dumper call at line 4 of myscript.pl
-  Data::Dumper::Dumper call at line 5 of myscript.pl
+  Data::Dumper::Dumper call at myscript.pl line 4.
+  Data::Dumper::Dumper call at myscript.pl line 5.
   myscript.pl syntax OK
 
   # from within a Perl script
@@ -87,8 +87,8 @@ contains the subroutine.
 sub import {
 	shift;
 	attach_callback($_, sub {
-		my ($name, $file, $line) = @_;
-		print {*STDERR} "$name call at line $line of $file\n";
+		my ($name, $file, $line,$stash) = @_;
+		print {*STDERR} "$name call at $file line $line.\n";
 	}) foreach @_;
 	return;
 }
